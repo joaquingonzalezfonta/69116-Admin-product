@@ -1,0 +1,17 @@
+.table-admin {
+
+    tbody {
+        tr:nth-child(odd) {
+            background-color: #dd4242 !important;
+        }
+    }
+
+    .product-image {
+        img {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+}
