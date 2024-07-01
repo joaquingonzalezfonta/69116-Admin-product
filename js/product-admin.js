@@ -70,7 +70,9 @@ products.forEach((prod) => {
             ${prod.name}
         </td>
         <td class="product-description">
-            ${prod.description}
+            <div class="description" title="${prod.description}">
+                ${prod.description}
+            </div>
         </td>
         <td class="product-date">
             ${prod.createdAt}
