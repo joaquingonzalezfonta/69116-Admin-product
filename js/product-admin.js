@@ -64,7 +64,7 @@ products.forEach((prod) => {
 
     tableBodyHTML.innerHTML += `<tr>
         <td class="product-image">
-            <img src="${prod.image}" alt="">
+            <img src="${prod.image}" alt="${prod.name}">
         </td>
         <td class="product-name">
             ${prod.name}
