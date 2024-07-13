@@ -57,12 +57,15 @@ const products = [
 
 const tableBodyHTML = document.getElementById("table-body");
 
-console.log(tableBodyHTML)
+renderProducts(products)
 
-// Recorrer el array y hacer un console.log de cada producto
-products.forEach((prod) => {
+function renderProducts(ARRAY_TO_RENDER) {
 
-    tableBodyHTML.innerHTML += `<tr>
+    tableBodyHTML.innerHTML = ''
+
+    ARRAY_TO_RENDER.forEach((prod) => {
+
+        tableBodyHTML.innerHTML += `<tr>
         <td class="product-image">
             <img src="${prod.image}" alt="${prod.name}">
         </td>
@@ -84,32 +87,63 @@ products.forEach((prod) => {
             <button class="btn btn-primary btn-sm">
                 <i class="fa-solid fa-pen"></i>
             </button>
-            <button class="btn btn-danger btn-sm">
+            <button class="btn btn-danger btn-sm" onclick="deleteProduct( '${prod.id}' )">
                 <i class="fa-solid fa-trash"></i>
             </button>
         </td>
-</tr>`
+    </tr>`
 
-})
+    })
+}
 
-/* <tr>
-        <td class="product-image">
-            <img src="https://static.nike.com/a/images/t_default/28810afe-6b6a-4f6a-beb4-701a3539bb02/invincible-3-zapatillas-de-running-asfalto-9lqlcK.png" alt="">
-        </td>
-        <td class="product-name">
-            Zapatillas Nike
-        </td>
-        <td class="product-description">
-            Zapatillas Nike para correr en asfalto con tecnologia de amortiguacion
-        </td>
-        <td class="product-date">
-            2021-12-01
-        </td>
-        <td class="product-price">
-            $ 15000
-        </td>
-        <td class="product-actions">
-            <button class="btn btn-primary btn-sm">Editar</button>
-            <button class="btn btn-danger btn-sm">Eliminar</button>
-        </td>
-</tr> */
+
+
+// llamar una funcion especifica para borrar productos
+function deleteProduct(identificador) {
+    // obtener el id del producto a eliminar
+    console.log("id recibido", identificador)
+
+    // Poder identificar el indice del produto a eliminar a traves de algun metodo
+    const index = products.findIndex((producto) => {
+
+        // dondicion yo return un true 
+        if (identificador === producto.id) {
+            return true
+        } else {
+            return false
+        }
+
+    })
+    // Eliminar el producto del array con splice en base a su funcion
+    products.splice(index, 1)
+
+    renderProducts(products)
+}
+
+
+// search products
+
+function searchProduct(evt) {
+    // Recibo un evento en el caso del tipo oninput
+    console.log(evt.target.value)
+    let text = evt.target.value;
+    text = text.toLowerCase()
+
+    //Primero tengo que buscar un array que tengancomo valor Name el texto que la persona a escrito
+    const productosFiltrados = products.filter((PRODUCTITO) => {
+        const nombre = PRODUCTITO.name.toLowerCase();
+        const descripcion = PRODUCTITO.description.toLowerCase();
+
+        if (nombre.includes(text) || descripcion.includes(text)) {
+            return true
+        } else {
+            return false
+        }
+
+    })
+
+    console.log(productosFiltrados)
+
+    renderProducts(productosFiltrados)
+}
+
