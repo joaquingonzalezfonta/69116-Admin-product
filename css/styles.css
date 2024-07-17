@@ -1,8 +1,9 @@
 .table-admin {
 
-    tbody {
-        tr:nth-child(odd) {
-            background-color: #dd4242 !important;
+    #table-body {
+ 
+        tr:nth-child(odd) > td {
+            background-color: #ffffff !important;
         }
     }
 
@@ -33,4 +34,10 @@
             border-radius: 50%;
         }
     }
+}
+
+.table-container {
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
 }
