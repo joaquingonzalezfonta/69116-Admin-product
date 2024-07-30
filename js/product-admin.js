@@ -55,8 +55,26 @@ const products = [
     }
 ]
 
+// let isEditing = false; 
+
 const tableBodyHTML = document.getElementById("table-body");
-const formAdminHTML = document.getElementById("form-admin")
+const formAdminHTML = document.getElementById("form-admin");
+const btnSubmitHTML = document.querySelector("button[type='submit']")
+const btnsSortHTML = document.querySelectorAll("button[data-sort]") // Node list
+
+btnsSortHTML.forEach(btn => {
+    btn.addEventListener('click', (evt) => {
+        products.sort((a, b) => {
+            if(a.name > b.name) return -1;
+            if(a.name < b.name) return 1;
+            return 0;
+        })
+
+        renderProducts(products)
+    })
+})
+
+console.log(btnSubmitHTML)
 // Pintar todos los productos inicialmente
 renderProducts(products)
 
@@ -120,6 +138,18 @@ function deleteProduct(identificador) {
     // Obtener el id del producto a eliminar
     console.log("Id recibido", identificador)
 
+    const resultado = confirm("Realmente desea borrar el producto?");
+    if(resultado === false) {
+        return
+    }
+
+    // o la mejor opcion es:
+    // if(!resultado) {
+    //     return
+    // }
+
+
+
     // Poder identificar el indice del producto a eliminar a través de algún método 
     const index = products.findIndex((producto) => {
         // Condicion yo return un true
@@ -178,24 +208,52 @@ formAdminHTML.addEventListener('submit', (evt) => {
 
     console.log(el.date.value)
 
+    const idInput = el.id.value
+
+    // const ID = id ? id : crypto.randomUUID;
+
+    // if(id) {
+    //     ID = id
+    // } else {
+    //     ID = crypto.randomUUID
+    // }
+
     const nuevoProducto = {
         name: el.name.value,
-        price: el.price.valueAsNumber,
+        price: el.price.valueAsNumber || 0,
         category: el.category.value,
         description: el.description.value,
         image: el.image.value,
         createdAt: new Date(el.date.value).getTime(),
-        id: crypto.randomUUID()
+        id: idInput ? id : crypto.randomUUID()
     }
 
     console.log(nuevoProducto)
 
-    products.push(nuevoProducto)
+    if(idInput) {
+        // busco la posicion del elemnto que edite y lo actualizo (reemplazo)
+        // const index = products.findIndex(prod => prod.id === id);
+        const indice = products.findIndex(prod => {
+            if(id === prod.id) {
+                return true
+            }
+        });
+
+        products[indice] = nuevoProducto
+    }
+    else {
+        // sumo el elemento al array por que es un elemento nuevo
+        products.push(nuevoProducto)
+    }
+
+    el.id.value = ''
 
     renderProducts(products)
-
     formAdminHTML.reset();
     el.name.focus()
+
+    btnSubmitHTML.innerText = "Agregar producto";
+    btnSubmitHTML.classList.remove("btn-success");
     // console.dir(evt.target.elements.price.value)
     // console.dir(evt.target.elements.description.value)
     // console.dir(evt.target.elements.category.value)
@@ -219,9 +277,21 @@ function editProduct(idUpdate) {
         return false;
     })
 
+    btnSubmitHTML.innerText = "Editar producto";
+
+    btnSubmitHTML.classList.add("btn-success") 
+    // btnSubmitHTML.classList.remove("btn") // quita la clase
+    // btnSubmitHTML.classList.contains("btn") // true or false
+
+
+
+
+    // isEditing = true;
 
     const elem = formAdminHTML.elements;
     // Rellenar el formulario con esos datos
+    elem.id.value = productoEditar.id;
+
     elem.name.value = productoEditar.name;
 
     elem.price.value = productoEditar.price;
@@ -231,8 +301,10 @@ function editProduct(idUpdate) {
     elem.category.value = productoEditar.category;
 
     elem.image.value = productoEditar.image;
-
+    // Transformamos el formato timestamp milisegundos a un formato compatible con el input date (CreatedAt) "yyyy-mm-dd"
     elem.createdAt.value = formatTimestampToInputDate(productoEditar.createdAt)
+
+
 
     // Modificar el botón agregar por un botón que diga editar
     // Definir un mecanismo para saber que cuando se haga el submit poder definir si es un producto o estoy editando
