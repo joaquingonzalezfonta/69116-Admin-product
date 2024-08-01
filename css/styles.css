@@ -41,3 +41,7 @@
     margin: 0 auto;
     overflow-x: auto;
 }
+
+.btn-alert {
+    background-color: red;
+}
